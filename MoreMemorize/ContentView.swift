@@ -11,16 +11,13 @@ struct ContentView: View {
     
     @ObservedObject var viewModel: EmojiMemoryGame
     
-    let travelEmojis = ["🚗", "🚕","✈️","🛺", "🎡", "🚲","🚆","🛩️"]
-    let naturalEmojis = ["🐶","🐱","🐸","🐼", "🐵", "🦆", "🦄", "🐝", "🐢", "🦉"]
-    let fruitEmojis = ["🍏","🍎","🍐","🍋","🍆","🌽","🍌", "🥝", "🍑"]
-   
-    @State var emojis: Array<String> = []
-    @State var emojiType: String = ""
-   
-    @State var themeColor: Color?
-    @State var themeName = "Theme"
-    @State var score = 0
+
+//    @State var emojis: Array<String> = []
+//    @State var emojiType: String = ""
+//   
+//    @State var themeColor: Color?
+//    @State var themeName = "Theme"
+
     
 
     
@@ -28,7 +25,7 @@ struct ContentView: View {
         VStack {
             Text(viewModel.themeName)
                 .font(.largeTitle)
-            Text("Score:\(String(score))")
+            Text("Score:\(String(viewModel.score))")
                 .font(.title)
             
 //            ScrollView {
@@ -57,7 +54,7 @@ struct ContentView: View {
     var cards: some View {
         GeometryReader { geometry in
             let gridItemSize = gridItemWidthThatFits(
-                count: emojis.count,
+                count: viewModel.cards.count,
                 size: geometry.size,
                 atAspectRatio: 2/3)
             
@@ -68,7 +65,7 @@ struct ContentView: View {
 //                }
 //            }
             
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: gridItemSize), spacing: 0)], spacing: 0) {
                 ForEach(viewModel.cards) { card in
                     CardView(card)
                         .padding(4)
@@ -83,70 +80,9 @@ struct ContentView: View {
    
     }
     
-    var cardChooser: some View {
-        HStack(alignment: .lastTextBaseline) {
-            btnChooser(choose: "Map", symbol: emojiType == "Map" ? "map.fill" : "map")
-            Spacer()
-            btnChooser(choose: "Leaf", symbol: emojiType == "Leaf" ? "leaf.fill" : "leaf")
-            Spacer()
-            btnChooser(choose: "Carrot", symbol: emojiType == "Carrot" ? "carrot.fill" : "carrot")
-               
-        }
-        .frame(width: 260)
-        .imageScale(.large)
-        .font(.title2)
-    }
     
     func startNewGame() {
         viewModel.startNewGame()
-    }
-    
-    func btnChooser(choose type: String, symbol: String) -> some View {
-        Button(action: {
-            emojis = []
-            if type == "Map" {
-                emojiType = "Map"
-                let emojiCount = Int.random(in: 4...travelEmojis.count)
-                let travelEmojisShuffled = travelEmojis.shuffled()
-                var emojiArray: Array<String> = []
-                for index in 0..<emojiCount {
-                    emojiArray.append(travelEmojisShuffled[index])
-                    emojiArray.append(travelEmojisShuffled[index])
-                }
-                emojis = emojiArray.shuffled()
-                themeColor = .purple
-            } else if type == "Leaf" {
-                emojiType = "Leaf"
-                let emojiCount = Int.random(in: 4...naturalEmojis.count)
-                let naturalEmojisShuffled = naturalEmojis.shuffled()
-                var emojiArray: Array<String> = []
-                for index in 0..<emojiCount {
-                    emojiArray.append(naturalEmojisShuffled[index])
-                    emojiArray.append(naturalEmojisShuffled[index])
-                }
-                emojis = emojiArray.shuffled()
-                themeColor = .green
-            } else if type == "Carrot" {
-                emojiType = "Carrot"
-                let emojiCount = Int.random(in: 4...fruitEmojis.count)
-                let fruitEmojisShuffled = fruitEmojis.shuffled()
-                var emojiArray: Array<String> = []
-                for index in 0..<emojiCount {
-                    emojiArray.append(fruitEmojisShuffled[index])
-                    emojiArray.append(fruitEmojisShuffled[index])
-                }
-                emojis = emojiArray.shuffled()
-                themeColor = .orange
-            }
-            print(1)
-            
-        }, label: {
-            VStack {
-                Image(systemName: symbol)
-                Text(type)
-            }
-            
-        })
     }
     
     func gridItemWidthThatFits(

@@ -65,7 +65,7 @@ class EmojiMemoryGame: ObservableObject {
     
     private static func createMemoryGame() -> MemorizeGame<String> {
         let currentTheme = themeList.randomElement()!
-        let themeEmojis = Array(currentTheme.emojis).map { String($0) }
+        let themeEmojis = Array(currentTheme.emojis).map { String($0) }.shuffled()
         
         return MemorizeGame(numberOfPairsOfCards: currentTheme.pairNumber, fillColor: currentTheme.color, themeName: currentTheme.name) { pairIndex in
             if themeEmojis.indices.contains(pairIndex) {
@@ -88,6 +88,14 @@ class EmojiMemoryGame: ObservableObject {
         return model.themeName
     }
     
+    var score: Int {
+        return model.score
+    }
+    
+    func resumeScore() {
+        model.resumeScore()
+    }
+    
     func shuffle() {
         model.shuffle()
     }
@@ -97,6 +105,7 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     func startNewGame() {
+        resumeScore()
         model = EmojiMemoryGame.createMemoryGame()
     }
 }

@@ -11,6 +11,7 @@ import SwiftUI
 struct MemorizeGame<CardContent>  where CardContent: Equatable{
     private(set) var cards: Array<Card>
     private(set) var themeName: String
+    private(set) var score = 0
     
     init(numberOfPairsOfCards: Int, fillColor: Color, themeName: String, cardContentFactory: (Int) -> CardContent) {
         cards = []
@@ -20,6 +21,7 @@ struct MemorizeGame<CardContent>  where CardContent: Equatable{
             cards.append(Card(content: content, id: "\(pairIndex+1)a", fillColor: fillColor))
             cards.append(Card(content: content, id: "\(pairIndex+1)b", fillColor: fillColor))
         }
+        shuffle()
     }
     
     var indexOfTheOneAndOnlyFaceUpCard: Int? {
@@ -39,13 +41,25 @@ struct MemorizeGame<CardContent>  where CardContent: Equatable{
                     if cards[chosenIndex].content == cards[potentialMatchIndex].content {
                         cards[chosenIndex].isMatched = true
                         cards[potentialMatchIndex].isMatched = true
+                        score += 2
+                    } else {
+                        if cards[chosenIndex].hasBeenSeen {
+                            score -= 1
+                        }
+                        if cards[potentialMatchIndex].hasBeenSeen {
+                            score -= 1
+                        }
+                        cards[chosenIndex].hasBeenSeen = true
+                        cards[potentialMatchIndex].hasBeenSeen = true
                     }
                     //indexOfTheOneAndOnlyFaceUpCard = nil
+                    
                 } else {
 //                    for index in cards.indices {
 //                       cards[index].isFaceUp = false
 //                    }
                     indexOfTheOneAndOnlyFaceUpCard = chosenIndex
+                   
                 }
               
                 cards[chosenIndex].isFaceUp = true
@@ -57,6 +71,11 @@ struct MemorizeGame<CardContent>  where CardContent: Equatable{
     mutating func shuffle() {
         cards.shuffle()
     }
+    
+    mutating func resumeScore() {
+        score = 0
+    }
+    
     
     struct Card: Identifiable, Equatable{
 //        static func == (lhs: Card, rhs: Card) -> Bool {
@@ -71,6 +90,8 @@ struct MemorizeGame<CardContent>  where CardContent: Equatable{
         var content: CardContent
         var id: String
         var fillColor: Color = .orange
+        var hasBeenSeen: Bool = false
+        
     }
 }
 

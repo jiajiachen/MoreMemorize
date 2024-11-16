@@ -23,7 +23,7 @@ class EmojiMemoryGame: ObservableObject {
               color: .green),
         Theme(name: "Sports",
               emojis: "🏈⚾️🏀⚽️🎾🏐🥏🏓⛳️🥅🥌🏂⛷🎳",
-              pairNumber: 10,
+              pairNumber: nil,
               color: .orange),
         Theme(name: "Music",
               emojis: "🎼🎤🎹🪘🥁🎺🪗🪕🎻",
@@ -31,8 +31,10 @@ class EmojiMemoryGame: ObservableObject {
               color: .red),
         Theme(name: "Animals",
               emojis: "🐥🐣🐂🐄🐎🐖🐏🐑🦙🐐🐓🐁🐀🐒🦆🦅🦉🦇🐢🐍🦎🦖🦕🐅🐆🦓🦍🦧🦣🐘🦛🦏🐪🐫🦒🦘🦬🐃🦙🐐🦌🐕🐩🦮🐈🦤🦢🦩🕊🦝🦨🦡🦫🦦🦥🐿🦔",
-              pairNumber: 20,
-              color: .blue),
+              pairNumber: nil,
+              color: .cyan,
+              colorForGradient:  [Color.red, Color.blue]
+            ),
         Theme(name: "Animal Faces",
               emojis: "🐵🙈🙊🙉🐶🐱🐭🐹🐰🦊🐻🐼🐻‍❄️🐨🐯🦁🐮🐷🐸🐲",
               pairNumber: 12,
@@ -47,7 +49,7 @@ class EmojiMemoryGame: ObservableObject {
               color: .purple),
         Theme(name: "Faces",
               emojis: "😀😃😄😁😆😅😂🤣🥲☺️😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😝😜🤪🤨🧐🤓😎🥸🤩🥳😏😞😔😟😕🙁☹️😣😖😫😩🥺😢😭😤😠😡🤯😳🥶😥😓🤗🤔🤭🤫🤥😬🙄😯😧🥱😴🤮😷🤧🤒🤠",
-              pairNumber: 40,
+              pairNumber: nil,
               color: .yellow)
     ]
     
@@ -66,14 +68,16 @@ class EmojiMemoryGame: ObservableObject {
     private static func createMemoryGame() -> MemorizeGame<String> {
         let currentTheme = themeList.randomElement()!
         let themeEmojis = Array(currentTheme.emojis).map { String($0) }.shuffled()
-        
-        return MemorizeGame(numberOfPairsOfCards: currentTheme.pairNumber, fillColor: currentTheme.color, themeName: currentTheme.name) { pairIndex in
+        let pairNumber = currentTheme.pairNumber ?? Int.random(in: 4...themeEmojis.count)
+        return MemorizeGame(numberOfPairsOfCards: pairNumber, fillColor: currentTheme.color, themeName: currentTheme.name, colorForGradient: currentTheme.colorForGradient) { pairIndex in
             if themeEmojis.indices.contains(pairIndex) {
                 return  themeEmojis[pairIndex]
             } else {
                 return "⁉️"
             }
         }
+        
+
     }
     
     @Published private var model = createMemoryGame()

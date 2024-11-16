@@ -13,13 +13,13 @@ struct MemorizeGame<CardContent>  where CardContent: Equatable{
     private(set) var themeName: String
     private(set) var score = 0
     
-    init(numberOfPairsOfCards: Int, fillColor: Color, themeName: String, cardContentFactory: (Int) -> CardContent) {
+    init(numberOfPairsOfCards: Int, fillColor: Color, themeName: String, colorForGradient: [Color]?,cardContentFactory: (Int) -> CardContent) {
         cards = []
         self.themeName = themeName
         for pairIndex in 0..<max(2, numberOfPairsOfCards) {
             let content: CardContent = cardContentFactory(pairIndex)
-            cards.append(Card(content: content, id: "\(pairIndex+1)a", fillColor: fillColor))
-            cards.append(Card(content: content, id: "\(pairIndex+1)b", fillColor: fillColor))
+            cards.append(Card(content: content, id: "\(pairIndex+1)a", fillColor: fillColor, colorForGradient: colorForGradient))
+            cards.append(Card(content: content, id: "\(pairIndex+1)b", fillColor: fillColor, colorForGradient: colorForGradient))
         }
         shuffle()
     }
@@ -78,6 +78,7 @@ struct MemorizeGame<CardContent>  where CardContent: Equatable{
     
     
     struct Card: Identifiable, Equatable{
+        
 //        static func == (lhs: Card, rhs: Card) -> Bool {
 //            return lhs.isFaceUp == rhs.isFaceUp &&
 //            lhs.isMatched == rhs.isMatched &&
@@ -91,6 +92,7 @@ struct MemorizeGame<CardContent>  where CardContent: Equatable{
         var id: String
         var fillColor: Color = .orange
         var hasBeenSeen: Bool = false
+        var colorForGradient: [Color]?
         
     }
 }

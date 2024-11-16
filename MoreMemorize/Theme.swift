@@ -11,6 +11,7 @@ import SwiftUI
 struct Theme {
     var name: String
     var emojis: String
-    var pairNumber: Int
+    var pairNumber: Int?
     var color: Color // String
+    var colorForGradient: [Color]?
 }

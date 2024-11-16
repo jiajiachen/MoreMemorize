@@ -124,15 +124,15 @@ struct CardView: View {
         ZStack {
             let base = RoundedRectangle(cornerRadius: 12)
             Group {
-                base.foregroundStyle(.white)
-                base.strokeBorder(lineWidth: 2)
-                Text(card.content).font(.largeTitle)
+               base.foregroundStyle(.white)
+               base.strokeBorder(lineWidth: 2)
+               Text(card.content).font(.largeTitle)
             }
                 .opacity(card.isFaceUp ? 1 : 0)
             base.fill()
                 .opacity(card.isFaceUp ? 0 : 1)
         }
-            .foregroundStyle(card.fillColor)
+        .foregroundStyle(card.fillColor)
             .opacity(card.isFaceUp || !card.isMatched ? 1 : 0)
 //        .onTapGesture {
 //           isFaceUp.toggle()
